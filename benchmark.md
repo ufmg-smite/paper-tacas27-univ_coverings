@@ -1,14 +1,15 @@
-12154 QF_NRA problems in SMTLIB
+Benchmark families on the paper:
+  - 78 purely univariate from SMTLIB
+  - Intermediate univariate problems generated during multivariate coverings
+    + TODO: the code that outputs the intermediate problems is done on ufmg-smite/cvc5:gen_univ_benchmarks. It needs to be run on SMTLIB problems.
+  - 7 problems from Li's paper?
 
-5536 marked with ":status unsat"
+Modes:
+  - Fine grained (Coverings, 5 rules: SGN_INV_INTRO, SGN_INV_ELIM, COVER, RAN_EVAl, IS_ROOT_INTRO)
+  - Coarse grained (CAD, 1 rule: ARITH_COVERINGS_UNIV)
+  - Descartes?
 
-Out of the 5536, 2844 got solved before reaching the coverings solver
-
-The remaining 2692: 78 univariate, 2563 multivariate, 51 still timeout after 300s
-
-
-TODO 1: do the 2844 early solved problems got full proofs, checkable in Lean?
-TODO 2: Can the 78 be solved by incremental linearization and or cad? Does incremental linearization produce proofs checkable in lean?
-TODO 3: Extract the univariate side conditions for solving the 2563
-
-What happens with the 51? preprocessing for so long? Very big problems, also Brown's heuristic for variable ordering runs before your check
+Which time we use?
+  - Type checking (`set_option profiler true`) - just the time to check the proof produced by lean-smt
+  - Proof production (custom timers around the code of the `smt` tactic) - just the time to produce the proof
+    + We should not measure the time taken for proof rules alone because the fine grained version also relies on AND_ELIM and resolution. We should either measure the full time of the tactic or maybe the time of the tactic minus cvc5's time and maybe translation time...
